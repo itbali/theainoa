@@ -4,8 +4,9 @@ import {
     createUserDocumentFromAuth,
 } from "../../utils/firebase/firebase.util";
 import FormInput from "./../form-input/form-input.component";
-import "./sign-up-form.scss";
 import Button from "../button/button.component";
+
+import "./sign-up-form.scss";
 
 const defaultFormFields = {
     name: "",
@@ -30,12 +31,12 @@ const SignUpForm = () => {
             return alert("Passwords do not match");
         }
         try {
-            const response = await createAuthUserWithEmailAndPassword(
+            const { user } = await createAuthUserWithEmailAndPassword(
                 email,
                 password
             );
 
-            await createUserDocumentFromAuth(response.user, {
+            await createUserDocumentFromAuth(user, {
                 displayName: name,
             });
             resetFormFields();
