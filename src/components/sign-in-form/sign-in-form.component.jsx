@@ -4,7 +4,6 @@ import FormInput from "./../form-input/form-input.component";
 import "./sign-in-form.scss";
 import Button from "../../components/button/button.component";
 import {
-    createUserDocumentFromAuth,
     signInWithGooglePopup,
     signInWithGithubPopup,
     signInUserWithEmailAndPassword,
@@ -26,12 +25,8 @@ const SignInForm = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("signIN");
         try {
-            const { user } = await signInUserWithEmailAndPassword(
-                email,
-                password
-            );
+            await signInUserWithEmailAndPassword(email, password);
             resetFormFields();
         } catch (e) {
             if (e.message) {
@@ -46,9 +41,16 @@ const SignInForm = () => {
         setFormFields(defaultFormFields);
     };
 
-    const logWithService = (service) => async () => {
-        const { user } = await service();
-        await createUserDocumentFromAuth(user);
+    const logWithService = (signInService) => async () => {
+        try {
+            await signInService();
+        } catch (e) {
+            if (e.message) {
+                alert(e.message);
+            } else {
+                alert("some error has aquired");
+            }
+        }
     };
 
     return (
